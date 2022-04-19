@@ -1,4 +1,3 @@
-const fs = require('fs');
 const UserModel = require('./models/User');
 
 async function insertFakeUsers() {
@@ -24,8 +23,7 @@ async function insertFakeUsers() {
   ];
 
   try {
-    const data = await UserModel.insertMany(users);
-    fs.writeFileSync('user.json', JSON.stringify(data));
+    await UserModel.insertMany(users);
   } catch (e) {
     /* eslint-disable no-console */
     console.log(e);
