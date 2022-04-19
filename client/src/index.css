@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.grid-columns-3 {
+  grid-template-columns: max-content 1fr max-content;
+}
+.grid-columns-2 {
+  grid-template-columns: max-content 1fr;
+}
