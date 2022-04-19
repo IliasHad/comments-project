@@ -1,4 +1,4 @@
-# Express API Starter
+# Comments Project (Vanilla JS)
 
 Includes API Server utilities:
 
