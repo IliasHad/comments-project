@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Comment Project!</title>
+    <link rel="stylesheet" href="./tailwind.css" />
+  </head>
+  <body>
+    <div class="relative py-16 bg-white overflow-hidden">
+      <div class="relative px-4 sm:px-6 lg:px-8">
+        <div class="text-lg max-w-prose mx-auto">
+          <h1 class="font-bold text-left">Discussions</h1>
+          <form id="comment" class="grid grid-columns-3 my-4 gap-4">
+            <div id="profile_image"></div>
+
+            <label
+              for="text"
+              class="hidden sr-only text-sm font-medium text-gray-700"
+              >Text</label
+            >
+            <div class="mt-1 w-full">
+              <input
+                type="text"
+                name="text"
+                id="text"
+                class="
+                  shadow-sm
+                  focus:ring-indigo-500 focus:border-indigo-500
+                  block
+                  w-full
+                  sm:text-sm
+                  border-gray-300
+                "
+                placeholder="What are your thoughts ?"
+              />
+            </div>
+            <button
+              id="submit"
+              type="submit"
+              class="
+                inline-flex
+                items-center
+                px-2.5
+                py-1.5
+                border border-transparent
+                text-xs
+                font-medium
+                rounded
+                shadow-sm
+                text-white
+                bg-indigo-600
+                hover:bg-indigo-700
+                focus:outline-none
+                focus:ring-2
+                focus:ring-offset-2
+                focus:ring-indigo-500
+              "
+            >
+              <div id="loading" class="hidden">
+                <svg
+                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </div>
+              Comment
+            </button>
+          </form>
+          <div class="relative py-8">
+            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+              <div class="w-full border-t border-gray-300"></div>
+            </div>
+          </div>
+          <ul id="list" role="list">
+            <!-- More items... -->
+          </ul>
+        </div>
+      </div>
+    </div>
+    <script src="./index.js"></script>
+  </body>
+</html>
