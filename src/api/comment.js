@@ -6,7 +6,9 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   try {
     const { createdBy, content } = req.body;
-    const comment = await CommentModel.create({ createdBy, content });
+    const comment = await CommentModel.create({ createdBy, content }).populate(
+      'createdBy'
+    );
     res.json(comment);
   } catch (error) {
     res.status(500).json({ error });
@@ -14,7 +16,12 @@ router.post('/', async (req, res) => {
 });
 router.get('/all', async (req, res) => {
   try {
-    const comments = await CommentModel.find({}).populate('createdBy');
+    const comments = await CommentModel.find({})
+      .populate('createdBy')
+      .populate({
+        path: 'replies',
+        populate: { path: 'createdBy' },
+      });
     res.json(comments);
   } catch (error) {
     res.status(500).json({ error });
@@ -23,7 +30,38 @@ router.get('/all', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const comment = await CommentModel.findById(id);
+    const comment = await CommentModel.findById(id)
+      .populate('createdBy')
+      .populate({
+        path: 'replies',
+        populate: { path: 'createdBy' },
+      });
+    res.json(comment);
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
+router.put('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { createdBy, content } = req.body;
+    const { id: replyId } = await CommentModel.create({ createdBy, content });
+    const comment = await CommentModel.findByIdAndUpdate(
+      id,
+      {
+        $push: { replies: replyId },
+      },
+      {
+        new: true,
+        runValidators: true,
+        context: 'query',
+      }
+    )
+      .populate('createdBy')
+      .populate({
+        path: 'replies',
+        populate: { path: 'createdBy' },
+      });
     res.json(comment);
   } catch (error) {
     res.status(500).json({ error });
