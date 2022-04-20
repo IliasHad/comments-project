@@ -1,11 +1,9 @@
 module.exports = {
-  content: ['./public/*.html', './public/*.js'],
-  darkMode: 'media', // or 'media' or 'class'
-  theme: {
-    extend: {},
-  },
-  variants: {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],  theme: {
     extend: {},
   },
   plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],
-};
+
+}
