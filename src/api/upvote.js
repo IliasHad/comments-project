@@ -20,7 +20,10 @@ router.post('/:commentId', async (req, res) => {
           runValidators: true,
           context: 'query',
         }
-      );
+      ).populate('createdBy').populate({
+        path: 'replies',
+        populate: { path: 'createdBy' }
+      });
       res.json(comment);
     } else {
       const comment = await CommentModel.findOneAndUpdate(
@@ -31,7 +34,10 @@ router.post('/:commentId', async (req, res) => {
           runValidators: true,
           context: 'query',
         }
-      );
+      ).populate('createdBy').populate({
+        path: 'replies',
+        populate: { path: 'createdBy' }
+      });
       res.json(comment);
     }
   } catch (error) {
