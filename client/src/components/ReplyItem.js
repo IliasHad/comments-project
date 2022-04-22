@@ -1,27 +1,36 @@
 import { useForm } from "react-hook-form";
+import { timeSince } from "../utils/index";
 
 export const ReplyItem = ({
   reply,
   comments,
   setComments,
-  index,
-  replyIndex,
+  parentCommentId,
 }) => {
   const { register, handleSubmit } = useForm();
 
   const replyHandler = (data) => {
     const { replyId } = data;
+    const index = comments.findIndex(
+      (comment) => comment._id === parentCommentId
+    );
     const userId = localStorage.getItem("userId");
     fetch(`/api/v1/upvote/${replyId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ createdBy: userId }),
+      body: JSON.stringify({
+        createdBy: userId,
+        parentCommentId: comments[index]._id,
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        const replyIndex = comments[index].replies.findIndex(
+          (el) => el._id === replyId
+        );
         const newComments = [...comments];
         newComments[index].replies[replyIndex] = data;
         setComments(newComments);
@@ -40,21 +49,32 @@ export const ReplyItem = ({
           {...register("replyId")}
         />
         <img
-          class="inline-block h-12 w-12 rounded-full"
+          className="inline-block h-12 w-12 rounded-full"
           src={reply.createdBy.profilePicture}
           alt={`${reply.createdBy.firstName} ${reply.createdBy.lastName}`}
         ></img>
-              <div className="min-w-0 flex-1 text-left ">
-          <div>
+        <div className="min-w-0 flex-1 text-left ">
+          <div className="flex gap-4">
             <div className="text-sm">
-                          <span className="font-medium text-gray-900">{reply.createdBy.firstName} {reply.createdBy.lastName}</span>
+              <span className="font-medium text-gray-900">
+                {reply.createdBy.firstName} {reply.createdBy.lastName}
+              </span>
             </div>
-            <p className="mt-0.5 text-sm text-gray-500">{reply.createdAt}</p>
+            <p
+              className="
+                        text-xs
+                        font-light
+                        text-gray-500
+                        group-hover:text-gray-700
+                      "
+            >
+              {timeSince(new Date(reply.createdAt))}
+            </p>
           </div>
           <div className="mt-2 text-sm text-gray-700">
             <p>{reply.content}</p>
           </div>
-          <span class="relative z-0 flex gap-4 my-4">
+          <span className="relative z-0 flex gap-4 my-4">
             <button
               onClick={handleSubmit(replyHandler)}
               type="submit"
@@ -77,15 +97,15 @@ export const ReplyItem = ({
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
+                className="h-5 w-5"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                stroke-width="2"
+                strokeWidth="2"
               >
                 <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   d="M5 15l7-7 7 7"
                 />
               </svg>
@@ -93,7 +113,7 @@ export const ReplyItem = ({
             </button>
             <button
               type="button"
-              class="
+              className="
                         -ml-px
                         relative
                         inline-flex
