@@ -1,3 +1,4 @@
 /api/*            https://comment-project-yf3ol.ondigitalocean.app/api/:splat  200
 
+/*                https://comment-project-yf3ol.ondigitalocean.app/:splat  200
 /*                /index.html  200
