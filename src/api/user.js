@@ -3,6 +3,15 @@ const UserModel = require('../models/User');
 
 const router = express.Router();
 
+router.get('/random/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await UserModel.findOne({ _id: { $ne: id } });
+    res.json({ user, random: true });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+});
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
