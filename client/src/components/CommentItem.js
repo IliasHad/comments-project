@@ -1,12 +1,14 @@
 import { useForm } from "react-hook-form";
 import { ReplyItem } from "./ReplyItem";
 import { useState } from "react";
-export const CommentItem = ({ comment, comments, setComments, index }) => {
+import { timeSince } from "../utils/index";
+export const CommentItem = ({ comment, comments, setComments }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const [loading, setLoading] = useState(false);
   const [selectedComment, setSelectedComment] = useState(null);
   const upvoteHandler = (data) => {
     const { commentId } = data;
@@ -22,7 +24,9 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        const index = comments.findIndex((el) => el._id === comment._id);
         const newComments = [...comments];
+
         newComments[index] = data;
         setComments(newComments);
       })
@@ -31,7 +35,9 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
       });
   };
   const replyHandler = (data) => {
+    setLoading(true);
     const { commentId, reply } = data;
+    const index = comments.findIndex((comment) => comment._id === commentId);
     console.log(data);
     const userId = localStorage.getItem("userId");
     fetch(`/api/v1/comment/${commentId}`, {
@@ -51,16 +57,17 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
       })
       .catch((err) => {
         console.error(err);
-      });
+      })
+      .finally(() => setLoading(false));
   };
   return (
-    <li class="px-4 py-4 sm:px-0 list-none relative flex items-start space-x-3">
+    <li className="px-4 py-4 sm:px-0 list-none relative flex items-start space-x-3">
       <div className="relative  pb-8">
         {comment.replies.length > 0 && (
           <span className="absolute top-12 mt-4 left-5 -ml-px h-full w-0.5 bg-gray-200"></span>
         )}
 
-        <form class="grid grid-columns-2">
+        <form className="grid grid-columns-2">
           <input
             type="hidden"
             name="commentId"
@@ -70,16 +77,16 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
           <div>
             {comment.createdBy && (
               <img
-                class="inline-block h-12 w-12 rounded-full"
+                className="inline-block h-12 w-12 rounded-full"
                 src={comment.createdBy.profilePicture}
                 alt={`${comment.createdBy.firstName} ${comment.createdBy.lastName}`}
               />
             )}
           </div>
-          <div class="pl-3">
-            <div class="flex items-center gap-4">
+          <div className="pl-3">
+            <div className="flex items-center gap-4">
               <p
-                class="
+                className="
                         text-sm
                         font-medium
                         text-gray-700
@@ -89,21 +96,22 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
                 {comment.createdBy.firstName} {comment.createdBy.lastName}
               </p>
               <p
-                class="
+                className="
                         text-xs
                         font-light
                         text-gray-500
                         group-hover:text-gray-700
                       "
               >
-                {comment.createdAt}
+                {timeSince(new Date(comment.createdAt))}
               </p>
             </div>
-            <p class="mt-1 text-sm text-gray-600 line-clamp-2 max-w-max">
+            <p className="mt-1 text-sm text-gray-600 line-clamp-2 max-w-max">
               {comment.content}
             </p>
-            <span class="relative z-0 flex gap-4 my-4">
+            <span className="relative z-0 flex gap-4 my-4">
               <button
+                disabled={loading}
                 onClick={handleSubmit(upvoteHandler)}
                 className={`  relative
                         flex
@@ -124,15 +132,15 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
+                  className="h-5 w-5"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  stroke-width="2"
+                  strokeWidth="2"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M5 15l7-7 7 7"
                   />
                 </svg>
@@ -145,7 +153,7 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
                     : setSelectedComment(comment._id)
                 }
                 type="button"
-                class="
+                className="
                         -ml-px
                         relative
                         inline-flex
@@ -183,7 +191,7 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
                 />
                 <button
                   onClick={handleSubmit(replyHandler)}
-                  class="
+                  className="
                 inline-flex
                 items-center
                 px-2.5
@@ -202,28 +210,30 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
                 focus:ring-indigo-500
               "
                 >
-                  <div id="loading" class="hidden">
-                    <svg
-                      class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                      ></circle>
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                  </div>
+                  {loading && (
+                    <div>
+                      <svg
+                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    </div>
+                  )}
                   Reply
                 </button>
               </div>
@@ -234,13 +244,13 @@ export const CommentItem = ({ comment, comments, setComments, index }) => {
                   .sort((a, b) =>
                     b.upvotes.length < a.upvotes.length ? -1 : 1
                   )
-                  .map((reply, replyIndex) => (
+                  .map((reply) => (
                     <ReplyItem
+                      key={reply._id}
                       reply={reply}
-                      replyIndex={replyIndex}
                       setComments={setComments}
                       comments={comments}
-                      index={index}
+                      parentCommentId={comment._id}
                     />
                   ))}
               </ul>
