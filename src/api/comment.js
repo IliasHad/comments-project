@@ -6,10 +6,13 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   try {
     const { createdBy, content } = req.body;
-    const comment = await CommentModel.create({ createdBy, content }).populate(
-      'createdBy'
-    );
-    res.json(comment);
+
+    const comment = new CommentModel({ createdBy, content });
+    comment.save(() => {
+      comment.populate('createdBy', (err, doc) => {
+        res.json(doc);
+      });
+    });
   } catch (error) {
     res.status(500).json({ error });
   }
