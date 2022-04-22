@@ -1,0 +1,2 @@
+/api/*            https://my-app-w6viu.ondigitalocean.app/api/:splat  200
+/*                /index.html  200

@@ -1,5 +1,5 @@
 const fetchComments = () => {
-  fetch('http://localhost:5000/api/v0/comment/all', {
+  fetch('/api/v0/comment/all', {
     method: 'GET',
   })
     .then((response) => response.json())
@@ -117,7 +117,7 @@ const fetchComments = () => {
     .finally(() => upvoteCommentHandler(localStorage.getItem('userId')));
 };
 const fetchUserProfilePicture = (userId) => {
-  fetch(`http://localhost:5000/api/v0/user/${userId}`, {
+  fetch(`/api/v0/user/${userId}`, {
     method: 'GET',
   })
     .then((res) => res.json())
@@ -144,7 +144,7 @@ const addNewCommentHandler = (userId) => {
       document.getElementById('submit').disabled = true;
       document.getElementById('loading').classList.add('block');
       document.getElementById('loading').classList.remove('hidden');
-      fetch('http://localhost:5000/api/v0/comment', {
+      fetch('/api/v0/comment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ const upvoteCommentHandler = (userId) => {
       const formData = new FormData(form);
       if (formData.get('commentId')) {
         fetch(
-          `http://localhost:5000/api/v0/upvote/${formData.get('commentId')}`,
+          `/api/v0/upvote/${formData.get('commentId')}`,
           {
             method: 'POST',
             headers: {
