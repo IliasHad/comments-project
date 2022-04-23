@@ -7,7 +7,7 @@ export const CommentContainer = () => {
   const [comments, setComments] = useState([]);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-  const socket = io.connect();
+  const socket = io.connect(process.env.REACT_APP_SEVER_HOST);
   socket.on("connect", () => {
     console.log(socket.id);
   });
