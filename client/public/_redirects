@@ -1,3 +1,2 @@
 /api/*            https://comment-project-yf3ol.ondigitalocean.app/api/:splat  200
-/socket.io/ *     https://comment-project-yf3ol.ondigitalocean.app/socket.io/:splat  200
 /*                /index.html  200
